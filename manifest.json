@@ -1,0 +1,56 @@
+{
+  "slug": "dsh-achievement-journal",
+  "name": "DSH Achievement Journal",
+  "tagline": "Small moments. Collectible milestones.",
+  "taglineZh": "把 DSH 运行中的小瞬间，收成一枚枚徽章。",
+  "category": "DSH native plugin",
+  "port": 4187,
+  "accent": "#c6a8ff",
+  "hook": "Give the agent loop a tiny milestone shelf.",
+  "description": "A native Cordis plugin for DSH 0.2.1-rc.2 that observes session events without inspecting payloads and exposes per-session achievement counters through /achievements.",
+  "features": [
+    "Native session/event hook",
+    "/achievements show, json and reset",
+    "Per-session WeakMap state",
+    "Counts only event type and sequence",
+    "Offline demo with explicit provenance",
+    "JSON, Markdown and SVG exports",
+    "Chinese/English UI and reports; switching preserves current state",
+    "Native /achievements zh reports"
+  ],
+  "limitations": [
+    "Event counts do not measure quality, productivity or safety",
+    "Only live events after plugin activation/reset are counted",
+    "In-memory counters reset on process restart or plugin reload",
+    "Web studio is an offline simulation, not a DSH dashboard",
+    "Targeted at DSH 0.2.1-rc.2; APIs may change"
+  ],
+  "sources": [
+    {
+      "title": "DeepSeek Harness native extension cookbook",
+      "url": "https://github.com/deepseek-ai/deepseek-harness/blob/687f282e8625c6b8d11ff58211a90524be2e4317/docs/cookbook/extension-cookbook.md",
+      "date": "Source checked 2026-10-22"
+    },
+    {
+      "title": "DeepSeek Harness command registry",
+      "url": "https://github.com/deepseek-ai/deepseek-harness/blob/687f282e8625c6b8d11ff58211a90524be2e4317/packages/interaction/commands/src/index.ts",
+      "date": "Source checked 2026-10-22"
+    },
+    {
+      "title": "DSH agent lifecycle",
+      "url": "https://github.com/deepseek-ai/deepseek-harness/blob/687f282e8625c6b8d11ff58211a90524be2e4317/docs/agent-lifecycle.md",
+      "date": "Source checked 2026-10-22"
+    },
+    {
+      "title": "DSH session event API",
+      "url": "https://github.com/deepseek-ai/deepseek-harness/blob/687f282e8625c6b8d11ff58211a90524be2e4317/packages/core/session/src/index.ts",
+      "date": "Source checked 2026-10-22"
+    }
+  ],
+  "demoActions": [
+    "Open ?lang=zh or use the language selector",
+    "Tap lifecycle events without losing counters on language change",
+    "Import a strictly ordered event sample",
+    "Export a source-labeled Chinese SVG"
+  ]
+}

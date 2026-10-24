@@ -1,0 +1,20 @@
+// Optional browser checks. Install Playwright separately or set PLAYWRIGHT_MODULE_PATH.
+import {createRequire} from 'node:module';import assert from 'node:assert/strict';import {createServer} from 'node:http';import {spawn} from 'node:child_process';import {fileURLToPath} from 'node:url';import {mkdir,readFile} from 'node:fs/promises';
+const require=createRequire(import.meta.url),{chromium}=require(process.env.PLAYWRIGHT_MODULE_PATH||'playwright'),root=fileURLToPath(new URL('../',import.meta.url));
+const probe=createServer();await new Promise(r=>probe.listen(0,'127.0.0.1',r));const port=probe.address().port;await new Promise(r=>probe.close(r));
+const child=spawn(process.execPath,['cli.mjs','serve','--port',String(port)],{cwd:root,stdio:['ignore','pipe','pipe']});let browser;
+try{
+ await new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(new Error('Server timeout')),5000);child.stdout.once('data',()=>{clearTimeout(timer);resolve();});child.once('error',e=>{clearTimeout(timer);reject(e);});child.once('exit',()=>{clearTimeout(timer);reject(new Error('Server exited'));});});
+ browser=await chromium.launch({headless:true,...process.env.PLAYWRIGHT_CHANNEL?{channel:process.env.PLAYWRIGHT_CHANNEL}:{}});const page=await browser.newPage({viewport:{width:1440,height:1000}});const errors=[],external=[],origin='http://127.0.0.1:'+port;page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>{if(!r.url().startsWith(origin)&&!r.url().startsWith('blob:'))external.push(r.url());});await page.goto(origin+'?lang=zh');assert.equal(await page.locator('#language').inputValue(),'zh');assert.equal(await page.locator('html').getAttribute('lang'),'zh-CN');await page.locator('#language').selectOption('en');assert.equal(await page.locator('html').getAttribute('lang'),'en');
+
+ await page.locator('#reset').click();await page.locator('#add-turn').click();await page.getByText('Import an event sample',{exact:true}).click();const text='[{"seq":1,"type":"step/end"}]';await page.locator('#events').fill(text);
+ await page.locator('#language').selectOption('zh');assert.equal(await page.locator('#earned').innerText(),'1 / 5');assert.equal(await page.locator('#events').inputValue(),text);assert.match(await page.locator('h1').innerText(),/里程碑/);assert.match(await page.locator('#badges').innerText(),/初次启程/);assert.match(await page.locator('#source-status').innerText(),/离线模拟/);
+ for(const format of ['md','svg']){const p=page.waitForEvent('download');await page.locator('#export-'+format).click();const data=await readFile(await(await p).path(),'utf8');assert.match(data,/DSH 成就簿/);assert.match(data,/离线模拟/);}
+ await page.locator('#language').selectOption('en');assert.equal(await page.locator('#earned').innerText(),'1 / 5');assert.equal(await page.locator('#events').inputValue(),text);await page.locator('#inspect').click();assert.equal(await page.locator('#steps').innerText(),'1');assert.match(await page.locator('#source-status').innerText(),/Imported/);
+ await page.locator('#events').fill('invalid');await page.locator('#inspect').click();await page.locator('#language').selectOption('zh');assert.equal(await page.locator('#steps').innerText(),'1');assert.ok(await page.locator('#export-json').isEnabled());assert.match(await page.locator('#status').innerText(),/JSON 格式无效/);assert.equal(await page.locator('#events').inputValue(),'invalid');await page.locator('#sample').click();
+
+ await mkdir(new URL('../docs/assets/',import.meta.url),{recursive:true});await page.screenshot({path:fileURLToPath(new URL('../docs/assets/zh-desktop.png',import.meta.url)),fullPage:true});
+ await page.setViewportSize({width:390,height:844});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'mobile overflow');await page.screenshot({path:fileURLToPath(new URL('../docs/assets/zh-mobile.png',import.meta.url)),fullPage:true});
+ assert.deepEqual(errors,[]);assert.deepEqual(external,[]);console.log('PASS: language preserves state and input, Chinese UI + exports, regression flows, desktop/mobile, zero page errors and external requests.');
+}finally{await browser?.close();child.kill();}
+

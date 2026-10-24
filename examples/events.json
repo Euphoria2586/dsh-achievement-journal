@@ -1,0 +1,98 @@
+[
+  {
+    "seq": 0,
+    "type": "assistant/attempt"
+  },
+  {
+    "seq": 1,
+    "type": "tool/result"
+  },
+  {
+    "seq": 2,
+    "type": "tool/result"
+  },
+  {
+    "seq": 3,
+    "type": "step/end"
+  },
+  {
+    "seq": 4,
+    "type": "tool/result"
+  },
+  {
+    "seq": 5,
+    "type": "tool/result"
+  },
+  {
+    "seq": 6,
+    "type": "turn/end"
+  },
+  {
+    "seq": 7,
+    "type": "tool/result"
+  },
+  {
+    "seq": 8,
+    "type": "tool/result"
+  },
+  {
+    "seq": 9,
+    "type": "step/end"
+  },
+  {
+    "seq": 10,
+    "type": "tool/result"
+  },
+  {
+    "seq": 11,
+    "type": "tool/result"
+  },
+  {
+    "seq": 12,
+    "type": "turn/end"
+  },
+  {
+    "seq": 13,
+    "type": "tool/result"
+  },
+  {
+    "seq": 14,
+    "type": "tool/result"
+  },
+  {
+    "seq": 15,
+    "type": "step/end"
+  },
+  {
+    "seq": 16,
+    "type": "tool/result"
+  },
+  {
+    "seq": 17,
+    "type": "tool/result"
+  },
+  {
+    "seq": 18,
+    "type": "turn/end"
+  },
+  {
+    "seq": 19,
+    "type": "tool/result"
+  },
+  {
+    "seq": 20,
+    "type": "tool/result"
+  },
+  {
+    "seq": 21,
+    "type": "step/end"
+  },
+  {
+    "seq": 22,
+    "type": "tool/result"
+  },
+  {
+    "seq": 23,
+    "type": "tool/result"
+  }
+]
